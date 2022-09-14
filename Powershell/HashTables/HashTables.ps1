@@ -75,3 +75,48 @@ $environments['QA','DEV']    # array style 3
 
 
 # 7. Iterating hashtables
+
+<# Because a hashtable is a collection of key/value pairs, 
+you have to iterate over it differently than you would an array or a normal list of items. #>
+
+# i.) The first thing to notice is that if you pipe your hashtable, the pipe treats it like one object.
+
+$ageList | Measure-Object
+
+# Even though the .count property tells you how many values it contains.
+
+$ageList.Count
+
+# You get around this issue by using the .values property if all you need is just the values.
+
+$ageList.values | Measure-Object -Average
+
+# 7.1 More useful option is enumerate the keys and use them to access values. To achieve we can use -f operator.
+
+$ageList.keys | ForEach-Object{
+    $message = '{0} is {1} years old!' -f $_, $ageList[$_]
+    Write-Output $message
+}
+
+# 7.2 other method to enumerate
+
+$ageList.keys | ForEach-Object{
+        Write-Output "Key = $_"
+        Write-Output "Value = $($ageList[$_])"
+        Write-Output '----------'
+}
+
+# 7.3 other method to enumerate with a foreach(){...} loop.
+
+foreach($key in $ageList.keys)
+{
+    $message = '{0} is {1} years old' -f $key, $ageList[$key]
+    Write-Output $message
+}
+
+# 7.4 Using GetEnumerator() method for iterating over our hashtable.
+
+$ageList.GetEnumerator() | ForEach-Object{
+    $message = '{0} is {1} years old!' -f $_.key, $_.value
+    Write-Output $message
+}
