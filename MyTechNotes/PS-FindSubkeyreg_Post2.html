@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>MytechNotes</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abel&amp;display=swap">
+    <link rel="stylesheet" href="assets/css/Navbar-Right-Links.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-md py-3" style="background: rgb(248,245,245);box-shadow: 0px 0px 4px 1px;">
+        <div class="container"><a class="navbar-brand d-flex align-items-center" href="#"><span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon" style="background: rgb(94,203,112);"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-package">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <polyline points="12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3"></polyline>
+                        <line x1="12" y1="12" x2="20" y2="7.5"></line>
+                        <line x1="12" y1="12" x2="12" y2="21"></line>
+                        <line x1="12" y1="12" x2="4" y2="7.5"></line>
+                        <line x1="16" y1="5.25" x2="8" y2="9.75"></line>
+                    </svg></span><span>My Tech Notes</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-2"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-2">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Application Packaging</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">MECM</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Scripting</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col">
+                <div>
+                    <h2 style="text-align: center;">Powershell Script<br><br></h2>
+                    <h4 style="text-align: left;">Script to find random subkey using associated subkey value<br></h4>
+                    <p>The script will query <strong>HKLM\Software\Microsoft\Enrollments\*</strong> and looks for the value name <strong>"AADResourceID"</strong>, if detected returns the value and its corresponding subkey else captured as NotFound. The script is mainly designed to query remote registry. The output is not returned if the machines are not online or the registry subkey value is not present .<br></p><div><B>Script to find subkey registry</B></div>
+<div class='K2_CBox'>
+    <div class='CB_Heading'>
+      <span>Script to find subkey registry</span>
+      <button id='copy1' class='C_box_main' onclick="copyC('copy1','code1')">
+        <i class='CBox_icn'></i>
+      </button>
+    </div>
+
+    <!--Add Your Parse HTML code Here-->
+    <div id='code1'>
+      <pre>$ErrorActionPreference = 'SilentlyContinue'
+If (Test-Path -Path "E:\Powershell\Result.cv") {Remove-Item "E:\Powershell\Result.cv" -Force}
+Import-Csv "E:\Powershell\Result.cv" | foreach {
+$VName = $null
+$V = $null
+$SKey = $null
+$MacName = $_.Name
+
+If (Test-Connection -ComputerName $MacName -Count 1 -ea 0) {
+
+$Registry_Location = 'SOFTWARE\Microsoft\Enollments'
+$Remote_Registry = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine', $MacName)
+$Remote_Registry.OpenSubKey($Registry_Location).GetSubKeyNames() | foreach {
+
+$Sub_Key = "$Registry_Location\$_"
+$a = $Remote_Registry.OpenSubKey($Sub_Key).GetValueName()
+
+If ($a -eq "AADResourceID"){
+$VName = "AADResourceID"
+$V = $Remote_Registry.OpenSubKey($Sub_Key).GetValue('AADResourceID')
+$SKey = $Sub_Key
+} Else {
+$VName = "NotFound"
+$V = "NotFound"
+$SKey = $Sub_Key
+}
+
+New-Object -TypeName psobject -Property @{
+Name = $MacName
+ValueName = $VName
+Value = $V
+SubKey = $SKey
+}
+
+}
+}
+} | Select Name, ValueName, value, SubKey | Export-Csv "E:\powershell\Result.csv" -Append -NoTypeInformation</pre>
+    </div>
+  </div>
+<style>
+  .K2_CBox{position:relative;background:#fff;width:100%;border-radius:6px;box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;padding:10px;margin:30px 0 30px}
+  .K2_CBox .CB_Heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+  .K2_CBox .CB_Heading span{margin:0;font-weight:700;font-family:inherit;font-size:1.1rem}
+  .K2_CBox .C_box_main{cursor:pointer;display:inline-flex;align-items:center;padding:12px;outline:0;border:0;border-radius:50%;background:#5ecb70;transition:all .3s ease;-webkit-transition:all .3s ease}.K2_CBox .C_box_main:hover{opacity:.8}.K2_CBox .C_box_main .CBox_icn{flex-shrink:0;display:inline-block;width:18px;height:18px;background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23fefefe' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' viewBox='0 0 24 24'><rect x='5.54615' y='5.54615' width='16.45385' height='16.45385' rx='4'/><path d='M171.33311,181.3216v-8.45385a4,4,0,0,1,4-4H183.787' transform='translate(-169.33311 -166.86775)'/></svg>");background-size:cover;background-repeat:no-repeat;background-position:center}
+  .K2_CBox .C_box_main.copied{background:#2dcda7}
+  .K2_CBox .C_box_main.copied .CBox_icn{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23fefefe' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' viewBox='0 0 24 24'><path d='M22 11.07V12a10 10 0 1 1-5.93-9.14'/><polyline points='23 3 12 14 9 11'/></svg>")}
+  .K2_CBox pre{margin:0;background:#e3fae7;padding:15px;border-radius:5px;color:#08102b;font-size:.8rem;font-family:monospace;overflow:scroll;scroll-behavior:smooth;scroll-snap-type:x mandatory;-ms-overflow-style:none;-webkit-overflow-scrolling:touch; white-space: pre-wrap;}
+  .K2_CBox pre::before, .K2_CBox pre::after{content:''}
+  .dark-Mode .K2_CBox{background:#2d2d30}.dark-Mode .K2_CBox pre{background:#252526;color:#fffdfc}
+  .tNtf span{position:fixed;left:24px;bottom:-70px;display:inline-flex;align-items:center;text-align:center;justify-content:center;margin-bottom:20px;z-index:99981;background:#323232;color:rgba(255,255,255,.8);font-size:14px;font-family:inherit;border-radius:3px;padding:13px 24px; box-shadow:0 5px 35px rgba(149,157,165,.3);opacity:0;transition:all .1s ease;animation:slideinwards 2s ease forwards;-webkit-animation:slideinwards 2s ease forwards}
+  @media screen and (max-width:500px){.tNtf span{margin-bottom:20px;left:20px;right:20px;font-size:13px}}
+  @keyframes slideinwards{0%{opacity:0}20%{opacity:1;bottom:0}50%{opacity:1;bottom:0}80%{opacity:1;bottom:0}100%{opacity:0;bottom:-70px;visibility:hidden}}
+  @-webkit-keyframes slideinwards{0%{opacity:0}20%{opacity:1;bottom:0}50%{opacity:1;bottom:0}80%{opacity:1;bottom:0}100%{opacity:0;bottom:-70px;visibility:hidden}}
+  .darkMode .tNtf span{box-shadow:0 10px 40px rgba(0,0,0,.2)}
+  </style>
+<div id='toastNotif' class='tNtf'></div> 
+<script>/*<![CDATA[*/ function copyC(e,t){var o=document.getElementById(e),n=document.getElementById(t),e=getSelection(),t=document.createRange();e.removeAllRanges(),t.selectNodeContents(n),e.addRange(t),document.execCommand("copy"),e.removeAllRanges(),o.classList.add("copied"),document.getElementById("toastNotif").innerHTML="<span>Copied to Clipboard!</span>",setTimeout(()=>{o.classList.remove("copied")},3e3)} /*]]>*/</script>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="text-center bg-dark mt-3">
+        <div class="container text-white py-4 py-lg-5">
+            <p class="text-muted mb-0">Copyright © 2022 My Tech Notes</p>
+        </div>
+    </footer>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+</body>
+
+</html>

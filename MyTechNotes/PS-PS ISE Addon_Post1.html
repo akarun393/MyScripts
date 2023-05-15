@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>MytechNotes</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abel&amp;display=swap">
+    <link rel="stylesheet" href="assets/css/Navbar-Right-Links.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-md py-3" style="background: rgb(248,245,245);box-shadow: 0px 0px 4px 1px;">
+        <div class="container"><a class="navbar-brand d-flex align-items-center" href="#"><span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon" style="background: rgb(94,203,112);"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-package">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <polyline points="12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3"></polyline>
+                        <line x1="12" y1="12" x2="20" y2="7.5"></line>
+                        <line x1="12" y1="12" x2="12" y2="21"></line>
+                        <line x1="12" y1="12" x2="4" y2="7.5"></line>
+                        <line x1="16" y1="5.25" x2="8" y2="9.75"></line>
+                    </svg></span><span>My Tech Notes</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-2"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-2">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Application Packaging</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">MECM</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Scripting</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col">
+                <div>
+                    <h2 style="text-align: center;">Powershell Article<br><br></h2>
+                    <h3 style="text-align: left;">Powershell ISE Add-on to sign a script<br></h3>
+                    <h5 class="pt-1" style="text-align: left;"><span style="text-decoration: underline;">Abstract</span><br></h5>
+                    <p>Set script-signature.ps1 will create an ISE Add-on that will sign the current file opened in the editor. As a prerequisite we need to generate code signing certificate and the certificate should be installed to user's personal certificate store.<br></p>
+                    <h5><span style="text-decoration: underline;">STEP1:</span> Creation of Powershell ISE Profile</h5>
+                    <p>From the Powershell ISE run the below command to check the existence of profile. If value is False, then create a profile as below screenshot.</p><img src="assets/img/PS-PS%20ISE%20Addon_Image1.jpg">
+                    <p><strong>Note:</strong> Location of profile may vary from your user account, it can be home directory or local documents location like<br><span style="background-color: rgb(250, 255, 8);">"C:\Users\USERNAME\Documents\WindowsPowerShell\Microsoft.PowerShellISE_profile.ps1"</span>.<br></p>
+                    <h5><span style="text-decoration: underline;">STEP2:</span> Copy paste PS script to the profile</h5>
+                    <ul>
+                        <li>Copy the contents of&nbsp;<strong>Set-ScriptSignature.ps1</strong>&nbsp;to the created powershell ISE profile&nbsp;<strong>Microsoft.PowerShellISE_profile.ps1</strong>.<br></li>
+                        <li><div>Set-ScriptSignature.ps1:</div>
+ 
+<div class='K2_CBox'>
+    <div class='CB_Heading'>
+      <span>Set-ScriptSignature.ps1 script</span>
+      <button id='copy1' class='C_box_main' onclick="copyC('copy1','code1')">
+        <i class='CBox_icn'></i>
+      </button>
+    </div>
+
+    <!--Add Your Parse HTML code Here-->
+    <div id='code1'>
+      <pre>#requires -Version 3.0
+if ($host.name -eq 'Windows PowerShell ISE Host') {
+    function Set-ScriptSignature {
+    <#
+    .SYNOPSIS
+    Signs the current file in the ISE with the user's code-signing certificate. You
+    must have a valid code-signing certificate in your personal certificate store
+    for this to work. Prompts for save location if the file has not yet been saved.
+    .NOTES 
+    Author: Matt McNabb
+    Date: 8/22/2014 
+    DISCLAIMER: This script is provided 'AS IS'. It has been tested for personal use, please  
+    test in a lab environment before using in a production environment.
+    #> 
+    
+    function Get-FileSavePath {
+        $SaveDialog = New-Object -TypeName System.Windows.Forms.SaveFileDialog
+        $SaveDialog.Filter = 'Powershell Files(*.ps1;*.psm1;*.psd1;*.ps1xml;*.pssc*;*.cdxml)|*.ps1;*.psm1;*.psd1;*.ps1xml;*.pssc*;*.cdxml|All files (*.*)|*.*'
+        $SaveDialog.FilterIndex = 1
+        $SaveDialog.RestoreDirectory = $true
+        $SaveDialog.ShowDialog()
+        $SaveDialog.FileName
+    }
+    
+        $File = $psise.CurrentFile
+        $Path = $File.FullPath
+        $Certificate = (dir Cert:\CurrentUser\My)[9]
+        if ($Certificate)
+        {
+            if ($File.IsUntitled)
+            {
+                $Path = Get-FileSavePath
+                $File.SaveAs($Path,[text.encoding]::utf8)
+            }
+            if (-not($File.IsSaved)) {$File.Save([text.encoding]::utf8)}
+            Add-Content -Path $Path -Value ''
+            Set-AuthenticodeSignature -FilePath $Path -Certificate $Certificate | Out-Null
+            $psise.CurrentPowerShellTab.Files.Remove($File) | Out-Null
+            $psise.CurrentPowerShellTab.Files.Add($Path) | Out-Null
+        }
+        else {throw 'A valid code-signing certificate could not be found!'} 
+    }
+    
+    $psISE.CurrentPowerShellTab.AddOnsMenu.submenus.add(“Sign Script”, {Set-ScriptSignature},$null) | Out-Null
+}</pre>
+    </div>
+  </div>
+<style>
+  .K2_CBox{position:relative;background:#fff;width:100%;border-radius:6px;box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;padding:10px;margin:30px 0 30px}
+  .K2_CBox .CB_Heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+  .K2_CBox .CB_Heading span{margin:0;font-weight:700;font-family:inherit;font-size:1.1rem}
+  .K2_CBox .C_box_main{cursor:pointer;display:inline-flex;align-items:center;padding:12px;outline:0;border:0;border-radius:50%;background:#5ecb70;transition:all .3s ease;-webkit-transition:all .3s ease}.K2_CBox .C_box_main:hover{opacity:.8}.K2_CBox .C_box_main .CBox_icn{flex-shrink:0;display:inline-block;width:18px;height:18px;background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23fefefe' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' viewBox='0 0 24 24'><rect x='5.54615' y='5.54615' width='16.45385' height='16.45385' rx='4'/><path d='M171.33311,181.3216v-8.45385a4,4,0,0,1,4-4H183.787' transform='translate(-169.33311 -166.86775)'/></svg>");background-size:cover;background-repeat:no-repeat;background-position:center}
+  .K2_CBox .C_box_main.copied{background:#2dcda7}
+  .K2_CBox .C_box_main.copied .CBox_icn{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23fefefe' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' viewBox='0 0 24 24'><path d='M22 11.07V12a10 10 0 1 1-5.93-9.14'/><polyline points='23 3 12 14 9 11'/></svg>")}
+  .K2_CBox pre{margin:0;background:#e3fae7;padding:15px;border-radius:5px;color:#08102b;font-size:.8rem;font-family:monospace;overflow:scroll;scroll-behavior:smooth;scroll-snap-type:x mandatory;-ms-overflow-style:none;-webkit-overflow-scrolling:touch; white-space: pre-wrap;}
+  .K2_CBox pre::before, .K2_CBox pre::after{content:''}
+  .dark-Mode .K2_CBox{background:#2d2d30}.dark-Mode .K2_CBox pre{background:#252526;color:#fffdfc}
+  .tNtf span{position:fixed;left:24px;bottom:-70px;display:inline-flex;align-items:center;text-align:center;justify-content:center;margin-bottom:20px;z-index:99981;background:#323232;color:rgba(255,255,255,.8);font-size:14px;font-family:inherit;border-radius:3px;padding:13px 24px; box-shadow:0 5px 35px rgba(149,157,165,.3);opacity:0;transition:all .1s ease;animation:slideinwards 2s ease forwards;-webkit-animation:slideinwards 2s ease forwards}
+  @media screen and (max-width:500px){.tNtf span{margin-bottom:20px;left:20px;right:20px;font-size:13px}}
+  @keyframes slideinwards{0%{opacity:0}20%{opacity:1;bottom:0}50%{opacity:1;bottom:0}80%{opacity:1;bottom:0}100%{opacity:0;bottom:-70px;visibility:hidden}}
+  @-webkit-keyframes slideinwards{0%{opacity:0}20%{opacity:1;bottom:0}50%{opacity:1;bottom:0}80%{opacity:1;bottom:0}100%{opacity:0;bottom:-70px;visibility:hidden}}
+  .darkMode .tNtf span{box-shadow:0 10px 40px rgba(0,0,0,.2)}
+  </style>
+<div id='toastNotif' class='tNtf'></div> 
+<script>/*<![CDATA[*/ function copyC(e,t){var o=document.getElementById(e),n=document.getElementById(t),e=getSelection(),t=document.createRange();e.removeAllRanges(),t.selectNodeContents(n),e.addRange(t),document.execCommand("copy"),e.removeAllRanges(),o.classList.add("copied"),document.getElementById("toastNotif").innerHTML="<span>Copied to Clipboard!</span>",setTimeout(()=>{o.classList.remove("copied")},3e3)} /*]]>*/</script>
+
+<br></li>
+                        <li>Make sure you have a codesigning certificate added to the personal store and if there are multiple certificates then change the highlighted array value $Certificate = (dir Cert:\CurrentUser\My)<span style="background-color: rgb(255, 245, 15);">[9]</span> accordingly to the script.</li>
+                        <li>To check if there are multiple certificates run the below commands mentioned in the screenshot.</li>
+                    </ul><img src="assets/img/PS-PS%20ISE%20Addon_Image2.jpg">
+                    <ul>
+                        <li>Sign the <strong>$profile</strong> created script on safer side as below mentioned in the screenshot.</li>
+                    </ul><img src="assets/img/PS-PS%20ISE%20Addon_Image3.jpg">
+                    <h5 class="pt-3"><span style="text-decoration: underline;">STEP3:</span> How to sign a script from Powershell ISE console.</h5>
+                    <ul>
+                        <li>Open a PS script from Powershell ISE console and go to Add-ons (Tab)<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-narrow-right">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <line x1="15" y1="16" x2="19" y2="12"></line>
+                                <line x1="15" y1="8" x2="19" y2="12"></line>
+                            </svg>Sign Script.</li>
+                    </ul><img src="assets/img/PS-PS%20ISE%20Addon_Image4.jpg">
+                    <ul>
+                        <li>Once the script is signed no need to save the file and the script tab can be closed.</li>
+                    </ul>
+                    <h5><span style="text-decoration: underline;">REFERENCES:</span></h5><a class="text-decoration-none" href="https://gallery.technet.microsoft.com/scriptcenter/Powershell-ISE-Add-on-to-b66a7acf" style="color: rgb(94,203,112);">1. Set-ScriptSignature.ps1</a><a class="text-decoration-none" href="https://practical365.com/exchange-server/create-powershell-profile/" style="color: rgb(94,203,112);"><br>2. Create Powershell profile<br></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="text-center bg-dark mt-3">
+        <div class="container text-white py-4 py-lg-5">
+            <p class="text-muted mb-0">Copyright © 2022 My Tech Notes</p>
+        </div>
+    </footer>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+</body>
+
+</html>

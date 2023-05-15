@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>MytechNotes</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abel&amp;display=swap">
+    <link rel="stylesheet" href="assets/css/Navbar-Right-Links.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-md py-3" style="background: rgb(248,245,245);box-shadow: 0px 0px 4px 1px;">
+        <div class="container"><a class="navbar-brand d-flex align-items-center" href="#"><span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon" style="background: rgb(94,203,112);"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-package">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <polyline points="12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3"></polyline>
+                        <line x1="12" y1="12" x2="20" y2="7.5"></line>
+                        <line x1="12" y1="12" x2="12" y2="21"></line>
+                        <line x1="12" y1="12" x2="4" y2="7.5"></line>
+                        <line x1="16" y1="5.25" x2="8" y2="9.75"></line>
+                    </svg></span><span>My Tech Notes</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-2"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-2">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Application Packaging</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">MECM</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Scripting</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col">
+                <div>
+                    <h2 style="text-align: center;">Powershell Article<br><br></h2>
+                    <h3 style="text-align: left;">Powershell ISE Add-on to sign a script<br></h3>
+                    <h5 class="pt-1" style="text-align: left;"><span style="text-decoration: underline;">Abstract</span><br></h5>
+                    <p>Set script-signature.ps1 will create an ISE Add-on that will sign the current file opened in the editor. As a prerequisite we need to generate code signing certificate and the certificate should be installed as user.<br></p>
+                    <h5><span style="text-decoration: underline;">STEP1:</span> Creation of Powershell ISE Profile</h5>
+                    <p>From the Powershell ISE run the below command to check the existence of profile. If value is False, then create a profile as below screenshot.</p><img src="assets/img/PS-PS%20ISE%20Addon_Image1.jpg">
+                    <p><strong>Note:</strong> Location of profile may vary from your user account, it can be home directory or local documents location like<br><span style="background-color: rgb(250, 255, 8);">"C:\Users\USERNAME\Documents\WindowsPowerShell\Microsoft.PowerShellISE_profile.ps1"</span>.<br></p>
+                    <h5><span style="text-decoration: underline;">STEP2:</span> Copy paste PS script to the profile</h5>
+                    <ul>
+                        <li>Copy the contents of&nbsp;<strong>Set-ScriptSignature.ps1</strong>&nbsp;to the created powershell ISE profile&nbsp;<strong>Microsoft.PowerShellISE_profile.ps1</strong>.<br></li>
+                        <li><strong>Set-ScriptSignature.ps1:</strong><code><br><br><span style="color: inherit;">#requires -Version 3.0</span><br><span style="color: inherit;">if ($host.name -eq 'Windows PowerShell ISE Host') {</span><br><span style="color: inherit;"> function Set-ScriptSignature {</span><br><span style="color: inherit;"> &lt;#</span><br><span style="color: inherit;"> .SYNOPSIS</span><br><span style="color: inherit;"> Signs the current file in the ISE with the user's code-signing certificate. You</span><br><span style="color: inherit;"> must have a valid code-signing certificate in your personal certificate store</span><br><span style="color: inherit;"> for this to work. Prompts for save location if the file has not yet been saved.</span><br><span style="color: inherit;"> .NOTES </span><br><span style="color: inherit;"> Author: Matt McNabb</span><br><span style="color: inherit;"> Date: 8/22/2014 </span><br><span style="color: inherit;"> DISCLAIMER: This script is provided 'AS IS'. It has been tested for personal use, please </span><br><span style="color: inherit;"> test in a lab environment before using in a production environment.</span><br><span style="color: inherit;"> #&gt; </span><br><span style="color: inherit;"> </span><br><span style="color: inherit;"> function Get-FileSavePath {</span><br><span style="color: inherit;"> $SaveDialog = New-Object -TypeName System.Windows.Forms.SaveFileDialog</span><br><span style="color: inherit;"> $SaveDialog.Filter = 'Powershell Files(*.ps1;*.psm1;*.psd1;*.ps1xml;*.pssc*;*.cdxml)|*.ps1;*.psm1;*.psd1;*.ps1xml;*.pssc*;*.cdxml|All files (*.*)|*.*'</span><br><span style="color: inherit;"> $SaveDialog.FilterIndex = 1</span><br><span style="color: inherit;"> $SaveDialog.RestoreDirectory = $true</span><br><span style="color: inherit;"> $SaveDialog.ShowDialog()</span><br><span style="color: inherit;"> $SaveDialog.FileName</span><br><span style="color: inherit;"> }</span><br><span style="color: inherit;"> </span><br><span style="color: inherit;"> $File = $psise.CurrentFile</span><br><span style="color: inherit;"> $Path = $File.FullPath</span><br><span style="color: inherit;"> $Certificate = (dir Cert:\CurrentUser\My)[9]</span><br><span style="color: inherit;"> if ($Certificate)</span><br><span style="color: inherit;"> {</span><br><span style="color: inherit;"> if ($File.IsUntitled)</span><br><span style="color: inherit;"> {</span><br><span style="color: inherit;"> $Path = Get-FileSavePath</span><br><span style="color: inherit;"> $File.SaveAs($Path,[text.encoding]::utf8)</span><br><span style="color: inherit;"> }</span><br><span style="color: inherit;"> if (-not($File.IsSaved)) {$File.Save([text.encoding]::utf8)}</span><br><span style="color: inherit;"> Add-Content -Path $Path -Value ''</span><br><span style="color: inherit;"> Set-AuthenticodeSignature -FilePath $Path -Certificate $Certificate | Out-Null</span><br><span style="color: inherit;"> $psise.CurrentPowerShellTab.Files.Remove($File) | Out-Null</span><br><span style="color: inherit;"> $psise.CurrentPowerShellTab.Files.Add($Path) | Out-Null</span><br><span style="color: inherit;"> }</span><br><span style="color: inherit;"> else {throw 'A valid code-signing certificate could not be found!'} </span><br><span style="color: inherit;"> }</span><br><span style="color: inherit;"> </span><br><span style="color: inherit;"> $psISE.CurrentPowerShellTab.AddOnsMenu.submenus.add(“Sign Script”, {Set-ScriptSignature},$null) | Out-Null</span><br><span style="color: inherit;">}</span><br></code></li>
+                        <li>Make sure you have a codesigning certificate added to the personal store and if there are multiple certificates then change the highlighted array value $Certificate = (dir Cert:\CurrentUser\My)<span style="background-color: rgb(255, 245, 15);">[9]</span> accordingly to the script.</li>
+                        <li>To check if there are multiple certificates run the below commands mentioned in the screenshot.</li>
+                    </ul><img src="assets/img/PS-PS%20ISE%20Addon_Image2.jpg">
+                    <ul>
+                        <li>Sign the <strong>$profile</strong> created script on safer side as below mentioned in the screenshot.</li>
+                    </ul><img src="assets/img/PS-PS%20ISE%20Addon_Image3.jpg">
+                    <h5 class="pt-3"><span style="text-decoration: underline;">STEP3:</span> How to sign a script from Powershell ISE console.</h5>
+                    <ul>
+                        <li>Open a PS script from Powershell ISE console and go to Add-ons (Tab)<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrow-narrow-right">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <line x1="15" y1="16" x2="19" y2="12"></line>
+                                <line x1="15" y1="8" x2="19" y2="12"></line>
+                            </svg>Sign Script.</li>
+                    </ul><img src="assets/img/PS-PS%20ISE%20Addon_Image4.jpg">
+                    <ul>
+                        <li>Once the script is signed no need to save the file and the script tab can be closed.</li>
+                    </ul>
+                    <h5><span style="text-decoration: underline;">REFERENCES:</span></h5><a class="text-decoration-none" href="https://gallery.technet.microsoft.com/scriptcenter/Powershell-ISE-Add-on-to-b66a7acf" style="color: rgb(94,203,112);">1. Set-ScriptSignature.ps1</a><a class="text-decoration-none" href="https://practical365.com/exchange-server/create-powershell-profile/" style="color: rgb(94,203,112);"><br>2. Create Powershell profile<br></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="text-center bg-dark mt-3">
+        <div class="container text-white py-4 py-lg-5">
+            <p class="text-muted mb-0">Copyright © 2022 My Tech Notes</p>
+        </div>
+    </footer>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+</body>
+
+</html>

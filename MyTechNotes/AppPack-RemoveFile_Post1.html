@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>MytechNotes</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abel&amp;display=swap">
+    <link rel="stylesheet" href="assets/css/Navbar-Right-Links.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-md py-3" style="background: rgb(248,245,245);box-shadow: 0px 0px 4px 1px;">
+        <div class="container"><a class="navbar-brand d-flex align-items-center" href="#"><span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon" style="background: rgb(94,203,112);"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-package">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <polyline points="12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3"></polyline>
+                        <line x1="12" y1="12" x2="20" y2="7.5"></line>
+                        <line x1="12" y1="12" x2="12" y2="21"></line>
+                        <line x1="12" y1="12" x2="4" y2="7.5"></line>
+                        <line x1="16" y1="5.25" x2="8" y2="9.75"></line>
+                    </svg></span><span>My Tech Notes</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-2"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-2">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Application Packaging</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">MECM</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Scripting</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col">
+                <div>
+                    <h2 style="text-align: center;">Application Packaging<br><br></h2>
+                    <h4 style="text-align: left;">RemoveFile Table in MSI<br></h4>
+                    <p>RemoveFile table is one of the methods to remove files/folders during install/uninstall or either. It&nbsp;contains list of files/folder to be removed by the RemoveFiles action.<br>The demerit is that only the files associated to the component location can be removed either by defining the individual filenames or wildcard (*), which means the directories you want to remove files from has to be in directory table.<br><br>But we have a workaround if the directory is not present in the directory table, we can either create a property value which contains the full path of the file location or we can define a property by System search (App search table) in InstallShield.<br></p>
+                    <h4>Columns in RemoveFile Table</h4>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead style="background: rgb(94,203,112);">
+                                <tr>
+                                    <th>Column Name</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>FileKey</td>
+                                    <td>Primary key used to identify this particular table entry.</td>
+                                </tr>
+                                <tr>
+                                    <td>Component_</td>
+                                    <td>External key the first column of the Component table. This field references the component that controls the file to be removed.</td>
+                                </tr>
+                                <tr>
+                                    <td>FileName</td>
+                                    <td>This column contains the localizable name of the file to be removed. If this column is null, then the specified folder will be removed if it is empty. All of the files that match the wildcard will be removed from the specified directory.</td>
+                                </tr>
+                                <tr>
+                                    <td>DirProperty</td>
+                                    <td>Name of a property whose value is assumed to resolve to the full path to the folder of the file to be removed. The property can be the name of a directory in the Directory table, a property set by the AppSearch table, or any other property that represents a full path.</td>
+                                </tr>
+                                <tr>
+                                    <td>InstallMode</td>
+                                    <td>Must be one of the values (1 or 2 or 3).</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h5>InstallMode values</h5>
+                    <p>Must be one of the following values.</p>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead style="background: rgb(94,203,112);">
+                                <tr>
+                                    <th>Value</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Remove only when the associated component is being installed (msiInstallStateLocal or msiInstallStateSource).</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Remove only when the associated component is being removed (msiInstallStateAbsent).</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Remove in either of the above cases.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h4>Examples:</h4>
+                    <p>In video example 1, we can see how a dummy file is deleted during install/uninstall via RemoveFile table in InstallShield.&nbsp;</p><div><B>Example 1</B></div>
+<div class="embed-responsive embed-responsive-16by9">
+					   <iframe width="760" height="500" src="https://www.youtube.com/embed/pLqvQ4z1PCY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>				</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="text-center bg-dark mt-3">
+        <div class="container text-white py-4 py-lg-5">
+            <p class="text-muted mb-0">Copyright © 2022 My Tech Notes</p>
+        </div>
+    </footer>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+</body>
+
+</html>
