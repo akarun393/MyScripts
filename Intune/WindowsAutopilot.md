@@ -2,8 +2,11 @@
 <!-- Start Document Outline -->
 
 * [Windows Autopilot](#windows-autopilot)
-	* [Technical Requirements](#markdigsyntaxinlineshtmlinlinemarkdigsyntaxinlineshtmlinline-technical-requirements)
+	* [✅ Technical Requirements](#-technical-requirements)
 	* [Windows Autopilot Overview](#windows-autopilot-overview)
+	* [Uploading the hardware ID to Windows Autopilot](#uploading-the-hardware-id-to-windows-autopilot)
+		* [Command](#command)
+			* [CSV file contents](#csv-file-contents)
 
 <!-- End Document Outline -->
 
@@ -31,6 +34,41 @@ Windows Autopilot requires a cloud identity and cloud device identity, which can
 * As soon as this phase is completed, the user can see the desktop.
 </small>
 
+## Uploading the hardware ID to Windows Autopilot
+The Windows Autopilot hardware hash is a 4K string retrieved from the Windows 10 or Windows 11 OS on the device by running `Get-WindowsAutoPilotInfo.ps1`
+
+### Command
+**Offline:**
+```powershell
+Install-Script -Name Get-WindowsAutoPilotInfo
+Get-WindowsAutoPilotInfo.ps1 -OutputFile Hash.csv
+```
+Collect the csv and upload to the listed location below in Intune.
+
+>  Devices ->Enrollment ->Windows (tab) ->Windows Autopilot (section) ->Devices
+
+#### CSV file contents
+
+The csv file contains the listed below.
+
+* Device Serial Number
+* Windows Product ID
+* Hardware Hash
+* GroupTag (optional)
+
+The recommended way to get your brand-new devices into the Windows Autopilot service is to have your OEM or a Microsoft Cloud Solution Provider (CSP) partner upload the information.
+
+**Online:**
+```powershell
+Set-ExecutionPolicy Bypass -Force
+Install-PackageProvider Nuget -Confirm:$false -Force
+Install-Module WindowsAutopilotIntune -Force
+Install-Script -Name Get-WindowsAutoPilotInfo -Force
+Get-WindowsAutoPilotInfo.ps1 -GroupTag "GroupName" -Online
+```
+* We can ignore group tag if we want to go by default "ZTDid"
+* -online switch opens up the Authentication window.. Need to enter our Intune tenant login details and get authenticated so the device get registered.
+* Once device is added, we need to wait for the profile status to assigned then go for autopilot OOBE process
 
 
 
