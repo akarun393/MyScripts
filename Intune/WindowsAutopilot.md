@@ -9,7 +9,7 @@
 
 
 
-## <i class="fa-solid fa-triangle-exclamation"></i> Technical Requirements
+## :white_check_mark: Technical Requirements
 Windows Autopilot has some prerequisites:
 
 	• Microsoft Entra ID automatic enrollment needs to be configured.
