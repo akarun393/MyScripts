@@ -45,7 +45,7 @@ Get-WindowsAutoPilotInfo.ps1 -OutputFile Hash.csv
 ```
 Collect the csv and upload to the listed location below in Intune.
 
->  Devices ->Enrollment ->Windows (tab) ->Windows Autopilot (section) ->Devices
+>  Devices &rarr; Enrollment &rarr; Windows (tab) &rarr; Windows Autopilot (section) &rarr; Devices
 
 #### CSV file contents
 
