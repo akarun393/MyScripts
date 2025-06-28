@@ -68,7 +68,105 @@ Get-WindowsAutoPilotInfo.ps1 -GroupTag "GroupName" -Online
 ```
 * We can ignore group tag if we want to go by default "ZTDid"
 * -online switch opens up the Authentication window.. Need to enter our Intune tenant login details and get authenticated so the device get registered.
-* Once device is added, we need to wait for the profile status to assigned then go for autopilot OOBE process
+* Once device is added, we need to wait for the profile status to assigned then go for autopilot OOBE process.
+
+## Step-by-Step Process
+
+**Scenario:**
+You’ve just unboxed a new Windows laptop (or reset an existing one). Instead of manually setting it up, Autopilot automates the process based on a pre-configured profile.
+
+### 1. Device Boots Up for the First Time (OOBE)
+
+When you power on the device, it starts the Out-of-Box Experience (OOBE)—the initial setup screen.
+```
+[Power On] → [Windows Logo] → [“Hi, let’s get your device ready”]  
+```
+### 2. Device Connects to the Internet
+The device must have network access (Wi-Fi/Ethernet) to contact Microsoft’s Autopilot service.
+```
+[“Connecting to network…”]  
+   ↓  
+[Wi-Fi/Ethernet Connected]  
+```
+### 3. Device Sends Its Hardware Hash to Microsoft
+The device reads its unique hardware hash (like a fingerprint) from the motherboard.
+
+It sends this hash to:
+* Autopilot Deployment Service (ztd.dds.microsoft.com)
+* Azure AD (login.microsoftonline.com)
+```
+[Device]  
+   │  
+   ├───Sends Hardware Hash (ABCD-1234-EFGH-5678)  
+   │       │  
+   │       ▼  
+   │  [Microsoft Cloud]  
+   │  (Checks if hash matches an Autopilot profile)  
+   │  
+   ▼  
+[Waiting for response...]  
+```
+### 4. Microsoft Checks for an Autopilot Profile
+Microsoft’s cloud checks:
+
+* Is this device registered in Intune/Autopilot?
+* Does it have a profile assigned?
+```
+[Microsoft Cloud]  
+   │  
+   ├───"Is ABCD-1234-EFGH-5678 in our database?"  
+   │       │  
+   │       ▼  
+   │  ✅ "Yes! This device belongs to **Contoso Inc.**"  
+   │  ✅ "Profile found: **Standard User Setup**"  
+   │  
+   ▼  
+[Sending profile to device...]  
+```
+### 5. Device Downloads & Applies the Profile
+The device receives a JSON-based Autopilot profile with settings like:
+
+* Skip privacy screens
+* Auto-enroll in Intune
+* Install company apps
+```
+[Device applies profile]  
+   │  
+   ├───► Skips OEM setup  
+   ├───► Joins Azure AD automatically  
+   ├───► Installs Company Portal  
+   │  
+   ▼  
+[“Welcome to Contoso!” – Device is ready for use]  
+```
+### 6. Complete visualization diagram
+```mermaid
+sequenceDiagram
+    participant Device as New Windows Device
+    participant Network as Internet/Wi-Fi
+    participant AutopilotService as Autopilot Deployment Service
+    participant Intune as Microsoft Intune
+    participant AzureAD as Azure Active Directory
+
+    Note over Device: Out-of-Box-Experience (OOBE) Starts
+    Device->>Network: Connects to internet
+    activate Device
+    Device->>AutopilotService: Sends Hardware Hash (TPM/BIOS ID)
+    AutopilotService->>Intune: Checks registration
+    alt Hash exists in Intune
+        Intune->>AutopilotService: Returns assigned Autopilot profile
+        AutopilotService->>Device: Delivers JSON profile config
+        Device->>AzureAD: Authenticates (if Azure AD Join)
+        AzureAD-->>Device: Grants access
+        Device->>Intune: Enrolls for management
+        Intune->>Device: Pushes apps/policies
+    else No profile found
+        AutopilotService-->>Device: Continues standard OOBE
+    end
+    deactivate Device
+    Note over Device: Applies company settings<br>Skips consumer setup screens
+```
+
 
 
 
