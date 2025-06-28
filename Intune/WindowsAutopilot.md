@@ -39,6 +39,8 @@ Windows Autopilot requires a cloud identity and cloud device identity, which can
 * After entering the correct credentials, you will be met by the Entra ID sign-in workflow.
 * Then, enrollment starts, and all your configuration items, policies, certificates, and applications are applied to your physical endpoint device.
 * As soon as this phase is completed, the user can see the desktop.
+* Windows Autopilot data is stored within the European Union (EU), and not in the region where your Entra ID tenant is located.
+* It is not customer data that is stored, but business data, which enables Microsoft to provide the Windows Autopilot service, and customers can always opt out of the Windows Autopilot service.
 </small>
 
 ## Uploading the hardware ID to Windows Autopilot
@@ -62,6 +64,7 @@ The csv file contains the listed below.
 * Windows Product ID
 * Hardware Hash
 * GroupTag (optional)
+* Assigned user (optional)
 
 The recommended way to get your brand-new devices into the Windows Autopilot service is to have your OEM or a Microsoft Cloud Solution Provider (CSP) partner upload the information.
 
@@ -76,6 +79,53 @@ Get-WindowsAutoPilotInfo.ps1 -GroupTag "GroupName" -Online
 * We can ignore group tag if we want to go by default "ZTDid"
 * -online switch opens up the Authentication window.. Need to enter our Intune tenant login details and get authenticated so the device get registered.
 * Once device is added, we need to wait for the profile status to assigned then go for autopilot OOBE process.
+* we can have up to 500 rows in the CSV file.
+* The header and line format in the CSV file which include the ***device serial number***, the ***Windows product ID***, the ***hardware hash***, the ***Optional group tag***, and the ***Optional assigned user***.
+```
+<serialNumber>,<ProductID>,<hardwareHash>,<optionalGroupTag>,<optionalAssignedUser>
+ ```
+## How to decode Hardware hash
+* Download **Windows Assessment and Deployment Kit (ADK)**.
+* Select Deployment Tools feature and install.
+* Following the installation of the Windows ADK, you can find the tool you need here:
+> C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\amd64\Licensing\OA30\oa3tool.exe
+* Run the following command:
+```
+oa3tool.exe /DecodeHwHash=HardwareHash
+```
+* Then, you’ll get the decoded result of what is stored in the hardware hash.
+```XML
+OEM Activation Tool 3.0
+(c) Copyright 2023 Microsoft Corp.
+Version: 10.0.25398. 
+<?xml version="1.0"?>
+<HardwareReport>
+     <HardwareInventory>
+           <p n="ToolVersion" v="3" />
+           <p n="HardwareInventoryVersion" v="131" />
+           <p n="ToolBuild" v="10.0.17134.1" />
+           <p n="OSType" v="FullOS" />
+           <p n="OsCpuArchitecture" v="x64" />
+           <p n="OsBuild" v="10.0.17134.1" />
+           <p n="OsSystemTime" v="2018-05-18T12:51:13Z" />
+           <p n="OsLocalTime" v="2018-05-19T18:51:13+30:00" />
+           <p n="ProcessorModel" v="     Intel(R) Xeon(R) CPU E3-1220L V2 @ 2.30GHz" />
+           <p n="ProcessorPackages" v="1" />
+           <p n="ProcessorThreads" v="2" />
+           <p n="ProcessorCores" v="2" />
+           <p n="ProcessorHyperThreading" v="false" />
+           <p n="SmbiosRamArrayCount" v="1" />
+           <p n="SmbiosRamSlots" v="1" />
+           <p n="SmbiosRamErrorCorrection" v="None" />
+           <p n="SmbiosRamMaximumCapacity" v="2048" />
+           <p n="TotalPhysicalRAM" v="2" />
+           <p n="SmbiosFirmwareVendor" v="Microsoft Corporation" />
+           <p n="SmbiosSystemManufacturer" v="Microsoft Corporation" />
+           <p n="SmbiosSystemProductName" v="Virtual Machine" />
+           <p n="SmbiosSystemSerialNumber" v="2378-0002-7885-9434-1355-6165-71" />
+           <p n="SmbiosUuid" v="192a7ab2-4b1d-4433-9026-
+```
+
 
 ## Step-by-Step Process
 
