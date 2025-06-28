@@ -7,6 +7,13 @@
 	* [Uploading the hardware ID to Windows Autopilot](#uploading-the-hardware-id-to-windows-autopilot)
 		* [Command](#command)
 			* [CSV file contents](#csv-file-contents)
+	* [Step-by-Step Process](#step-by-step-process)
+		* [1. Device Boots Up for the First Time (OOBE)](#1-device-boots-up-for-the-first-time-oobe)
+		* [2. Device Connects to the Internet](#2-device-connects-to-the-internet)
+		* [3. Device Sends Its Hardware Hash to Microsoft](#3-device-sends-its-hardware-hash-to-microsoft)
+		* [4. Microsoft Checks for an Autopilot Profile](#4-microsoft-checks-for-an-autopilot-profile)
+		* [5. Device Downloads & Applies the Profile](#5-device-downloads--applies-the-profile)
+		* [6. Complete visualization diagram](#6-complete-visualization-diagram)
 
 <!-- End Document Outline -->
 
