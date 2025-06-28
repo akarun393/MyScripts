@@ -7,6 +7,7 @@
 	* [Uploading the hardware ID to Windows Autopilot](#uploading-the-hardware-id-to-windows-autopilot)
 		* [Command](#command)
 			* [CSV file contents](#csv-file-contents)
+	* [How to decode Hardware hash](#how-to-decode-hardware-hash)
 	* [Step-by-Step Process](#step-by-step-process)
 		* [1. Device Boots Up for the First Time (OOBE)](#1-device-boots-up-for-the-first-time-oobe)
 		* [2. Device Connects to the Internet](#2-device-connects-to-the-internet)
