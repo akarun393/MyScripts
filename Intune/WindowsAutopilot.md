@@ -15,6 +15,7 @@
 		* [4. Microsoft Checks for an Autopilot Profile](#4-microsoft-checks-for-an-autopilot-profile)
 		* [5. Device Downloads & Applies the Profile](#5-device-downloads--applies-the-profile)
 		* [6. Complete visualization diagram](#6-complete-visualization-diagram)
+	* [Autopilot Flowchart](#autopilot-flowchart)
 
 <!-- End Document Outline -->
 
@@ -225,6 +226,13 @@ sequenceDiagram
     Note over Device: Applies company settings<br>Skips consumer setup screens
 ```
 
+## Autopilot Flowchart
 
+***Page 1:***
+![AutopilotFlowchart 1](WindowsAutopilot/AutopilotFlowchart_1.png)
+**Note:** <mark style="background-color: lightblue">Pre-Provisioning is the latest name of White Glove.</mark>
+
+***Page 2:***
+![AutopilotFlowchart 2](WindowsAutopilot/AutopilotFlowchart_2.png)
 
 
