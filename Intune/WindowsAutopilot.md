@@ -16,6 +16,9 @@
 		* [5. Device Downloads & Applies the Profile](#5-device-downloads--applies-the-profile)
 		* [6. Complete visualization diagram](#6-complete-visualization-diagram)
 	* [Autopilot Flowchart](#autopilot-flowchart)
+	* [Autopilot for existing devices](#autopilot-for-existing-devices)
+		* [Using Windows Autopilot for Existing Devices with Traditional Deployment Tools](#using-windows-autopilot-for-existing-devices-with-traditional-deployment-tools)
+		* [Exporting an Autopilot Profile from Microsoft Intune](#exporting-an-autopilot-profile-from-microsoft-intune)
 
 <!-- End Document Outline -->
 
@@ -234,5 +237,31 @@ sequenceDiagram
 
 ***Page 2:***
 ![AutopilotFlowchart 2](WindowsAutopilot/AutopilotFlowchart_2.png)
+## Autopilot for existing devices
+* If you prefer not to manually collect and upload device information to Autopilot, alternative methods are available.
+* For devices already managed in Intune whether they are Microsoft Entra ID-joined or co-managed you can use the "Convert all targeted devices to Autopilot" option within the Autopilot profile.
+![Autopilot Existing Device](WindowsAutopilot/AutopilotExistingDevice.png)
+* By enabling this setting, all eligible devices in the assigned group(s) will be automatically registered with Autopilot if they aren’t already.
+* Once registered, these devices will follow the assigned Autopilot deployment process during their next Windows Out-of-Box Experience (OOBE).
+* Note that this setting does not convert existing Microsoft Entra hybrid-joined devices into Microsoft Entra ID only devices it solely registers them with the Autopilot service.
+### Using Windows Autopilot for Existing Devices with Traditional Deployment Tools
+* Windows Autopilot can also be applied to existing devices through traditional OS deployment methods, such as Microsoft Endpoint Manager aka (SCCM) or the Microsoft Deployment Toolkit (MDT).
+* To implement this, simply place the Autopilot profile JSON file in the following directory
+```
+%windir%\provisioning\AutoPilot\AutopilotConfigurationFile.json
+```
+* **Note:** Administrative privileges are required on the target Windows device to perform this action.
+### Exporting an Autopilot Profile from Microsoft Intune
+* If you’ve already created an Autopilot profile in Intune, you can export it using the WindowsAutopilotIntune PowerShell module.
+* Running the appropriate cmdlet will display a list of all Autopilot profiles in your tenant.
+```Powershell
+Install-Module WindowsAutopilotIntune -Force
+Install-Module Microsoft.Graph.Intune -Force
+Connect-MgGraph
+Get-Autopilotprofile
+```
+* For example, once you retrieve the profile list, you can use the profile ID to extract and convert it into the necessary JSON format. 
+
+
 
 
