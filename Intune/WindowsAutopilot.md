@@ -19,6 +19,8 @@
 	* [Autopilot for existing devices](#autopilot-for-existing-devices)
 		* [Using Windows Autopilot for Existing Devices with Traditional Deployment Tools](#using-windows-autopilot-for-existing-devices-with-traditional-deployment-tools)
 		* [Exporting an Autopilot Profile from Microsoft Intune](#exporting-an-autopilot-profile-from-microsoft-intune)
+		* [Steps to Create the JSON File](#steps-to-create-the-json-file)
+		* [Grouping Devices with a Correlator ID](#grouping-devices-with-a-correlator-id)
 
 <!-- End Document Outline -->
 
@@ -261,7 +263,60 @@ Connect-MgGraph
 Get-Autopilotprofile
 ```
 * For example, once you retrieve the profile list, you can use the profile ID to extract and convert it into the necessary JSON format. 
+```
+Get-AutopilotProfile
 
+Name                           Value
+----                           -----
+createdDateTime                10/15/2024 6:30:11 AM
+lastModifiedDateTime           10/31/2024 9:42:58 AM
+enableWhiteGlove               False
+@odata.type                    #microsoft.graph.azureADWindowsAutopilotDeploymentProfile
+hardwareHashExtractionEnabled  False
+extractHardwareHash            False
+deviceType                     windowsPc
+deviceNameTemplate             WINAKINTUNE-%RAND:3%
+outOfBoxExperienceSetting      {userType, keyboardSelectionPageSkipped, eulaHidden, privacySettingsHidden...}
+roleScopeTagIds                {0}
+language                       os-default
+id                             43bcf03a-ea70-438e-a633-25eb0a67112b
+managementServiceAppId
+displayName                    Autopilot Profile Demo1
+preprovisioningAllowed         False
+enrollmentStatusScreenSettings
+outOfBoxExperienceSettings     {userType, skipKeyboardSelectionPage, hideEscapeLink, hideEULA...}
+description
+locale                         os-default
+```
+* After retrieving an Autopilot profile using its unique ID, you can convert it into the required JSON format for deployment. 
+
+```
+Get-AutopilotProfile -id 43bcf03a-ea70-438e-a633-25eb0a67112b | ConvertTo-AutopilotConfigurationJSON
+
+{
+    "CloudAssignedDomainJoinMethod":  0,
+    "CloudAssignedDeviceName":  "WINAKINTUNE-%RAND:3%",
+    "CloudAssignedAutopilotUpdateTimeout":  1800000,
+    "CloudAssignedForcedEnrollment":  1,
+    "Version":  2049,
+    "CloudAssignedTenantId":  null,
+    "CloudAssignedAutopilotUpdateDisabled":  1,
+    "ZtdCorrelationId":  "43bcf03a-ea70-438e-a633-25eb0a67112b",
+    "Comment_File":  "Profile Autopilot Profile Demo1",
+    "CloudAssignedAadServerData":  "{\"ZeroTouchConfig\":{\"CloudAssignedTenantUpn\":\"\",\"ForcedEnrollment\":1,\"CloudAssignedTenantDomain\":null}}",
+    "CloudAssignedOobeConfig":  1310,
+    "CloudAssignedTenantDomain":  null,
+    "CloudAssignedLanguage":  "os-default"
+}
+```
+### Steps to Create the JSON File
+* Copy the Autopilot profile content.
+* Paste it into Notepad (or a text editor).
+* Save the file as AutopilotConfigurationFile.json.
+### Grouping Devices with a Correlator ID
+When enrolling existing devices via Configuration Manager Autopilot, you can group them using a correlator ID (ZtdCorrelationId). This ID is included in the Autopilot configuration file.
+* The enrollmentProfileName attribute in Microsoft Entra ID is automatically set to: ***OfflineAutopilotprofile - correlator ID***
+* This allows you to create dynamic Entra ID groups based on the correlator ID by filtering on the ***enrollmentProfileName*** attribute.
 
 
 
