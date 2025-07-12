@@ -21,6 +21,14 @@
 		* [Exporting an Autopilot Profile from Microsoft Intune](#exporting-an-autopilot-profile-from-microsoft-intune)
 		* [Steps to Create the JSON File](#steps-to-create-the-json-file)
 		* [Grouping Devices with a Correlator ID](#grouping-devices-with-a-correlator-id)
+		* [Out-of-box experience (OOBE) - Important Note](#out-of-box-experience-oobe---important-note)
+	* [Windows updates during the OOBE](#windows-updates-during-the-oobe)
+		* [Mandatory Updates During Windows Autopilot Provisioning](#mandatory-updates-during-windows-autopilot-provisioning)
+		* [Automatic Update Process:](#automatic-update-process)
+		* [Exclusions During OOBE:](#exclusions-during-oobe)
+		* [User Notification:](#user-notification)
+		* [Driver Management in Windows Autopilot](#driver-management-in-windows-autopilot)
+			* [Recommended Approach:](#recommended-approach)
 
 <!-- End Document Outline -->
 
@@ -315,8 +323,48 @@ Get-AutopilotProfile -id 43bcf03a-ea70-438e-a633-25eb0a67112b | ConvertTo-Autopi
 * Save the file as AutopilotConfigurationFile.json.
 ### Grouping Devices with a Correlator ID
 When enrolling existing devices via Configuration Manager Autopilot, you can group them using a correlator ID (ZtdCorrelationId). This ID is included in the Autopilot configuration file.
-* The enrollmentProfileName attribute in Microsoft Entra ID is automatically set to: ***OfflineAutopilotprofile - correlator ID***
+* The enrollmentProfileName attribute in Microsoft Entra ID is automatically set to: ***OfflineAutopilotprofile-correlator ID***
 * This allows you to create dynamic Entra ID groups based on the correlator ID by filtering on the ***enrollmentProfileName*** attribute.
 
+### Out-of-box experience (OOBE) - Important Note
+
+![O O B E](WindowsAutopilot/OOBE.PNG)
+**Language (Region) Settings:**
+For the selected language (region) to take effect during OOBE (Out-of-Box Experience), an Ethernet connection must be active. Without it, the OOBE wizard will prompt the end user for input. Additionally, the OS default language will only apply if the operating system is configured for a single language. For example, if the OS supports both en-US and nl-NL, the OOBE wizard page will still appear.
+
+**Automatic Keyboard Configuration:**
+Similarly, the automatic keyboard setup feature requires an Ethernet connection during OOBE to function properly. If no connection is available, the OOBE wizard will display the keyboard configuration page to the user.
+
+**Unattend.xml Consideration:**
+If an unattend.xml file is present on the device during OOBE, Windows Autopilot may fail. When imaging existing devices, ensure that no unattend files remain in the following locations:
+```Text
+%WINDIR%\Panther\Unattend\unattend.xml
+%WINDIR%\Panther\unattend.xml
+```
+## Windows updates during the OOBE
+### Mandatory Updates During Windows Autopilot Provisioning
+IT administrators cannot skip critical updates during Windows Autopilot provisioning, as these are essential for proper device functionality.
+
+### Automatic Update Process:
+
+* Critical driver updates and Windows Zero-Day Patch (ZDP) updates start downloading automatically during OOBE once the device connects to a network.
+* After these initial updates, Autopilot functional and critical updates are also downloaded and installed without user intervention.
+
+### Exclusions During OOBE:
+Feature updates and quality updates are not applied in this phase.
+
+### User Notification:
+Windows will display a notification informing the user that the device is checking for and installing updates.
+
+![OOBE update](WindowsAutopilot/OOBE_update.PNG)
+
+### Driver Management in Windows Autopilot
+When using a custom image without pre-integrated drivers, Windows may download drivers during the Autopilot process. However, this can trigger unexpected reboots, potentially disrupting the Autopilot workflow.
+
+#### Recommended Approach:
+
+* For new devices, use the OEM-provided image, as it includes all necessary drivers.
+* For existing devices, deploy a custom image with the correct drivers preloaded.
+* When testing Autopilot on existing devices, this method ensures the most reliable experience, closely matching that of a brand-new device.
 
 
