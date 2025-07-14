@@ -29,6 +29,8 @@
 		* [User Notification:](#user-notification)
 		* [Driver Management in Windows Autopilot](#driver-management-in-windows-autopilot)
 			* [Recommended Approach:](#recommended-approach)
+		* [Autopilot Profile Assignment Methods in Microsoft Intune](#autopilot-profile-assignment-methods-in-microsoft-intune)
+			* [The Zero Touch Deployment ID (ZTDID)](#the-zero-touch-deployment-id-ztdid)
 
 <!-- End Document Outline -->
 
@@ -356,7 +358,9 @@ Feature updates and quality updates are not applied in this phase.
 ### User Notification:
 Windows will display a notification informing the user that the device is checking for and installing updates.
 
+
 ![OOBE update](WindowsAutopilot/OOBE_update.PNG)
+
 
 ### Driver Management in Windows Autopilot
 When using a custom image without pre-integrated drivers, Windows may download drivers during the Autopilot process. However, this can trigger unexpected reboots, potentially disrupting the Autopilot workflow.
@@ -366,5 +370,39 @@ When using a custom image without pre-integrated drivers, Windows may download d
 * For new devices, use the OEM-provided image, as it includes all necessary drivers.
 * For existing devices, deploy a custom image with the correct drivers preloaded.
 * When testing Autopilot on existing devices, this method ensures the most reliable experience, closely matching that of a brand-new device.
+
+### Autopilot Profile Assignment Methods in Microsoft Intune
+Microsoft Intune supports two methods for assigning Autopilot profiles to devices:
+
+* **Static Azure AD (Entra ID) Groups** – Manual assignment that lacks automation, making it less ideal for enterprise environments.
+* **Dynamic Azure AD (Entra ID) Groups** – Enables automatic profile assignment.
+Understanding Windows Autopilot Identifiers
+
+#### The Zero Touch Deployment ID (ZTDID) 
+**(ZTDID)** serves as the unique identifier for devices within the Windows Autopilot service. Both **ZTDID** and **group tags** exist as attributes on the Entra ID device object.
+
+##### Group Tag Functionality:
+
+* Group tags are customizable values entered during CSV uploads to Autopilot.
+* Enable logical grouping of devices by purpose (e.g., information workers, shared devices, MTR systems, or kiosks).
+* Remain modifiable post-deployment to facilitate dynamic group reassignment.
+* Require manual synchronization in the Autopilot device blade for immediate effect (otherwise updates occur during the 24-hour background sync cycle)
+
+##### Device Import Process:
+**Standard import files should include:**
+
+* Device Serial Number
+* Windows Product ID
+* Hardware Hash
+
+To enable dynamic grouping, create a custom "OrderID" column with your grouping value (e.g., "EdgeKIOSK")
+
+**Post-Import Verification:**
+
+After importing device information to Microsoft Intune:
+
+* Use Microsoft Graph Explorer to verify device attributes.
+* Note that the Entra ID device object appears immediately.
+* The Intune device object only generates after MDM enrollment completes.
 
 
