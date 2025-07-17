@@ -379,7 +379,7 @@ Microsoft Intune supports two methods for assigning Autopilot profiles to device
 Understanding Windows Autopilot Identifiers
 
 #### The Zero Touch Deployment ID (ZTDID) 
-**(ZTDID)** serves as the unique identifier for devices within the Windows Autopilot service. Both **ZTDID** and **group tags** exist as attributes on the Entra ID device object.
+**(ZTDID)** serves as the unique identifier for devices within the Windows Autopilot service. Both **ZTDID** and **group tags** exist as attributes on the Entra ID device object. When a device is registered to the Autopilot service, its hardware hash is used to generate a Zero Touch Device ID (ZTDID) – a globally unique identifier for that device based on hardware information such as (but not only) MAC address, disk serial number, and system serial number.
 
 ##### Group Tag Functionality:
 
