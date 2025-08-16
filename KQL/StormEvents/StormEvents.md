@@ -31,6 +31,7 @@ Storm Events table contains data from old storms that happened in the United Sta
 * What data is stored in the StormEvents table?
 * The most useful functions you can run when interacting with a new data source is getschema.
 * This will produce a list of all the columns in the table and their data types.
+
 ![1.GetSchema](Image/1.GetSchema.png)
 
 
@@ -185,6 +186,51 @@ Selects only these three columns for the output:
 
 * Limits the output to the first 50 records that match all the criteria.
 * This prevents returning potentially large result sets.
+
+## 11. See total damage per state
+
+Query:
+
+```plaintext
+StormEvents
+| extend Damage = DamageProperty + DamageCrops
+| summarize sum(Damage) by State
+| top 10 by sum_Damage desc
+```
+![damage state](Image/damage_state.png)
+
+### Detailed Explanation of the KQL Query
+
+This KQL (Kusto Query Language) query analyzes storm event data to identify the top 10 states with the highest total damage (combining property and crop damage). Let's break it down step by step:
+
+#### 1. Data Source: `StormEvents`
+- The query starts with the `StormEvents` table, which presumably contains records of various storm events with columns like `DamageProperty`, `DamageCrops`, and `State`.
+
+#### 2. `extend Damage = DamageProperty + DamageCrops`
+- The `extend` operator creates a new calculated column called `Damage` for each record.
+- This new column sums two existing columns: `DamageProperty` (property damage) and `DamageCrops` (crop damage).
+- This combines both types of damage into a single metric for each storm event.
+
+#### 3. `summarize sum(Damage) by State`
+- The `summarize` operator aggregates the data.
+- `sum(Damage)` calculates the total damage (the sum of all Damage values we created in the previous step) for each unique value in the `State` column.
+- This gives us the combined property and crop damage totals per state.
+
+#### 4. `top 10 by sum_Damage desc`
+- The `top` operator limits the results to just the top 10 records.
+- It sorts by the aggregated column `sum_Damage` (which was automatically named from our `sum(Damage)` operation) in descending order (`desc`).
+- This shows us the 10 states with the highest total storm damage.
+
+#### Output:
+The final output will be a table with two columns:
+1. `State` - The name of the state
+2. `sum_Damage` - The total combined property and crop damage for that state
+
+The results will be ordered from the state with the highest damage total at the top to the 10th highest at the bottom.
+
+
+
+
 
 
 
