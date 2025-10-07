@@ -21,7 +21,8 @@
 Lists out the tables from the database.
 
 ## 2. DESCRIBE
-![1 Describe](Img/1_Describe.PNG)
+
+![1 Describe](Img/1_Describe.png)
 
 To understand each of the tables we need to use keyword DESCRIBE which means understanding each of the field about its `data type`, whether it can be `NULL`, whether it can be `primary key` or it can have `MUL`.
 
