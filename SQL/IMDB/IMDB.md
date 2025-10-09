@@ -10,6 +10,9 @@
 	* [7. WHERE](#7-where)
 	* [8. LOGICAL Operator](#8-logical-operator)
 	* [9. AGGREGATE Functions](#9-aggregate-functions)
+	* [10. GROUP BY](#10-group-by)
+	* [11. HAVING](#11-having)
+	* [12. Order of Keywords](#12-order-of-keywords)
 
 <!-- End Document Outline -->
 
@@ -174,3 +177,120 @@ SELECT COUNT(*) FROM movies WHERE year = 2000;
 ![AGG 4](Img/AGG_4.PNG)
 
 * Here `Count *` indicates entire column from the movies table and there is filter for year = 2008, which means the total number of movies for the year 2008 which returned as 11643.
+
+## 10. GROUP BY
+
+* `GROUP BY` is used to group the records based on our requirements.
+
+```sql
+SELECT year, COUNT(year) FROM movies GROUP BY year;
+```
+
+![Group 1](Img/Group_1.PNG)
+
+* Here the records are grouped based on the year, for instance year `2002` has `12056` records which means `12056` movies were released in year `2002`. 
+
+```sql
+SELECT year, COUNT(year) FROM movies GROUP BY year ORDER BY year LIMIT 10;
+```
+![Group 2](Img/Group_2.PNG)
+
+* Here the query is same as the previous query, the only difference is we have `ORDER BY` year, which provides the result in ascending order by default. 
+
+```sql
+SELECT year, COUNT(year) year_count FROM movies GROUP BY year ORDER BY year_count LIMIT 10;
+```
+
+![Group 3](Img/Group_3.PNG)
+
+* Here we have alias `year_count` for `COUNT(year)` in the query in order to use `ORDER BY` for `COUNT(year)`.
+* If the grouping column has `NULL` values, all the `NULL` values are grouped together.
+
+## 11. HAVING
+
+* **HAVING:** is used to filter groups (group by).
+* The listed query is to print year, year_count from the movies table which has movies released more than 1000 in a year.
+
+```sql
+SELECT year, COUNT(year) year_count FROM movies GROUP BY year HAVING year_count > 1000;
+```
+![HAV 1](Img/HAV_1.PNG)
+
+***Order of Execution:***
+
+1. `GROUP BY` to create groups
+2. Apply the AGGREGATE FUNCTION &rarr; `COUNT(year)`.
+3. Apply `HAVING` condition.
+
+* `HAVING` used along with `GROUP BY`. But not mandatory. 
+* `HAVING` without `GROUP BY` is same as `WHERE`.
+
+```sql
+SELECT name, year FROM movies HAVING year>2000;
+```
+![HAV 2](Img/HAV_2.PNG)
+
+* The listed query is to print year, year_count from the movies table where its movie `rank` > 9, `group by` year and `year_count` > 20 which means movies released should be > 20 in a year for the movie rank > 9.
+
+```sql
+SELECT year, COUNT(year) year_count FROM movies WHERE `rank` > 9 GROUP BY year HAVING year_count>20;
+```
+
+![HAV 3](Img/HAV_3.PNG)
+
+| HAVING                            | WHERE                                |
+|-----------------------------------|--------------------------------------|
+| `HAVING` is applied on groups.      | `WHERE` is applied on individual rows. |
+| `HAVING` is applied after grouping. | `WHERE` is used before grouping.       |
+
+## 12. Order of Keywords
+
+***MySQL Syntax:*** 
+
+We can see the order of keywords from the listed syntax **SELECT &rarr; DISTINCT &rarr; FROM &rarr; WHERE &rarr; GROUP BY &rarr; HAVING &rarr; ORDER BY &rarr; LIMIT**
+
+```sql
+SELECT
+    [ALL | DISTINCT | DISTINCTROW ]
+    [HIGH_PRIORITY]
+    [STRAIGHT_JOIN]
+    [SQL_SMALL_RESULT] [SQL_BIG_RESULT] [SQL_BUFFER_RESULT]
+    [SQL_NO_CACHE] [SQL_CALC_FOUND_ROWS]
+    select_expr [, select_expr] ...
+    [into_option]
+    [FROM table_references
+      [PARTITION partition_list]]
+    [WHERE where_condition]
+    [GROUP BY {col_name | expr | position}, ... [WITH ROLLUP]]
+    [HAVING where_condition]
+    [WINDOW window_name AS (window_spec)
+        [, window_name AS (window_spec)] ...]
+    [ORDER BY {col_name | expr | position}
+      [ASC | DESC], ... [WITH ROLLUP]]
+    [LIMIT {[offset,] row_count | row_count OFFSET offset}]
+    [into_option]
+    [FOR {UPDATE | SHARE}
+        [OF tbl_name [, tbl_name] ...]
+        [NOWAIT | SKIP LOCKED]
+      | LOCK IN SHARE MODE]
+    [into_option]
+
+into_option: {
+    INTO OUTFILE 'file_name'
+        [CHARACTER SET charset_name]
+        export_options
+  | INTO DUMPFILE 'file_name'
+  | INTO var_name [, var_name] ...
+}
+
+export_options:
+    [{FIELDS | COLUMNS}
+        [TERMINATED BY 'string']
+        [[OPTIONALLY] ENCLOSED BY 'char']
+        [ESCAPED BY 'char']
+    ]
+    [LINES
+        [STARTING BY 'string']
+        [TERMINATED BY 'string']
+    ]
+```
