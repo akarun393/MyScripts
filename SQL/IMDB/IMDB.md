@@ -13,6 +13,7 @@
 	* [10. GROUP BY](#10-group-by)
 	* [11. HAVING](#11-having)
 	* [12. Order of Keywords](#12-order-of-keywords)
+	* [13. INNER JOIN](#13-inner-join)
 
 <!-- End Document Outline -->
 
@@ -247,7 +248,7 @@ SELECT year, COUNT(year) year_count FROM movies WHERE `rank` > 9 GROUP BY year H
 
 ***MySQL Syntax:*** 
 
-We can see the order of keywords from the listed syntax **SELECT &rarr; DISTINCT &rarr; FROM &rarr; WHERE &rarr; GROUP BY &rarr; HAVING &rarr; ORDER BY &rarr; LIMIT**
+We can see the order of keywords from the listed syntax **FROM &rarr; JOIN &rarr;  WHERE &rarr; GROUP BY &rarr; HAVING &rarr; SELECT &rarr;  ORDER BY &rarr; LIMIT**
 
 ```sql
 SELECT
@@ -294,3 +295,33 @@ export_options:
         [TERMINATED BY 'string']
     ]
 ```
+
+## 13. INNER JOIN
+
+* Returns only matching records from both the table. 
+
+```sql
+SELECT * FROM movies m JOIN movies_genres g ON m.id = g.movie_id 
+WHERE m.id <=9;
+```
+* **m** represents alias for `movies` table, **g** represents alias for `movies_genres` table.
+* Here `m.id` and `g.movie_id` has common elements so we can use these id's to join both the tables.
+* JOIN and INNER JOIN both are equivalent.
+
+**RESULT:**
+
+![INN JOIN 1](Img/INN_JOIN_1.PNG)
+
+![INN JOIN 3](Img/INN_JOIN_3.png)
+
+![INN JOIN 2](Img/INN_JOIN_2.png)
+
+* The matching records **{1,2,5,6,8,9}** from the both tables are returned. 
+
+```sql
+SELECT m.name, g.genre FROM movies m JOIN movies_genres g ON m.id = g.movie_id 
+WHERE m.id <=9;
+```
+![INN JOIN 4](Img/INN_JOIN_4.png)
+
+* In this query only difference is we printed **name** columns from `movies` table and **genre** column from `movies_genres` table. Where as in previous query we printed * all columns from both tables.
