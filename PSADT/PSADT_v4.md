@@ -2,15 +2,17 @@
 <!-- Start Document Outline -->
 
 * [Powershell AppDeploy Toolkit v4](#powershell-appdeploy-toolkit-v4)
-	* [What is PSAppDeployToolkit ?](#what-is-psappdeploytoolkit-)
-	* [Standardized Workflow](#standardized-workflow)
-	* [User Experience](#user-experience)
-	* [Functions Library](#functions-library)
-	* [Improvements since PSADT v3](#improvements-since-psadt-v3)
-	* [Function Names](#function-names)
+	* [1. What is PSAppDeployToolkit ?](#1-what-is-psappdeploytoolkit-)
+	* [2. Standardized Workflow](#2-standardized-workflow)
+	* [3. User Experience](#3-user-experience)
+	* [4. Functions Library](#4-functions-library)
+	* [5. Improvements since PSADT v3](#5-improvements-since-psadt-v3)
+	* [6. Function Names](#6-function-names)
+	* [7. Important Note:](#7-important-note)
+	* [8. Other UI Improvements](#8-other-ui-improvements)
 
 <!-- End Document Outline -->
-## What is PSAppDeployToolkit ?
+## 1. What is PSAppDeployToolkit ?
 
 A PowerShell framework for Windows software deployment.
 
@@ -20,7 +22,7 @@ Typically used to wrap a vendor-supplied installer using:
 * A library of PowerShell functions to simplify common tasks.
 * That consistently results in highly successful deployments.
 
-## Standardized Workflow
+## 2. Standardized Workflow
 
 A prescriptive, best practice, and battle-tested workflow:
 
@@ -31,7 +33,7 @@ A prescriptive, best practice, and battle-tested workflow:
 * Reduces the time and effort required to package an app.
 * Extensive online community support.
 
-## User Experience
+## 3. User Experience
 
 A consistent, brandable and localizable User Interface:
 
@@ -44,7 +46,7 @@ A consistent, brandable and localizable User Interface:
 
 ![UE 1](Img/UE_1.PNG)
 
-## Functions Library
+## 4. Functions Library
 
 A library of PowerShell functions for common deployment tasks:
 
@@ -60,14 +62,14 @@ A library of PowerShell functions for common deployment tasks:
 * Check if PowerPoint is running, or if the microphone is in use.
 * Test for pending reboots, and much more.
 
-## Improvements since PSADT v3
+## 5. Improvements since PSADT v3
 Major functional changes from v3 to v4:
 
 * Still 100% free, and still 100% open source via LGPLv3.
 * Now distributed as a code-signed PowerShell module.
 * Supports PowerShell 7 and ARM64 devices.
 * Operates entirely in PowerShell strict mode v3.
-* Every function name has changed.
+* Every function name has changed. ***Prefix of ADT***.
 * We’ve made migrating as easy as possible:
 * Backwards compatibility layer allows use of existing v3 scripts (no Fluent UI).
 * Migration tool will convert existing v3 script to v4 format.
@@ -87,10 +89,11 @@ Improvements since PSADT v4
 * ***this assumes you want to use the PSADT User Interface to interact with the end user.**
 > LGPLv3 (GNU Lesser General Public License v3) is an open-source software license that permits users to run, study, and redistribute software for any purpose.
 
-## Function Names
+## 6. Function Names
 
 * All function names are renamed in version V4.
 * The listed table is for comparison for the versions 3.10.2 and 4.1.5.
+* For more info refer [v4-function-mapping](https://psappdeploytoolkit.com/docs/reference/v4-function-mapping) 
 
 
 <table>
@@ -639,6 +642,26 @@ Improvements since PSADT v4
 	</tr>
 </tbody>
 </table>
+
+
+## 7. Important Note:
+* **Help console** can be accessed using the module function `Show-ADTHelpConsole`.
+* To be interactive in **SYSTEM** context use the module fuction `Open-ADTSession` so **ServiceUI.exe** usage can be skipped.
+
+
+## 8. Other UI Improvements
+Deferral Expiry Deadlines.
+
+* Automatic Start Countdown.
+* Set default dialog position.
+* Allow user to move dialogs.
+* Set accent color (branding).
+* Refined look and feel.
+
+
+To change GUI color, modify the value for **FluentAccentColor** from **Config.psd1**. 
+
+![Welcome](Img/Welcome.PNG)
 
 
 
