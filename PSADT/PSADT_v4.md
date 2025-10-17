@@ -663,7 +663,24 @@ To change GUI color, modify the value for **FluentAccentColor** from **Config.ps
 
 ![Welcome](Img/Welcome.PNG)
 
+## 9. Deployment Concepts
+
+**Deployment Template File & Folder Structure** 
 
 
+<table>
+<tr style="background-color: #ffebe9">
+  <td>Header 1</td>
+  <td>Header 2</td>
+</tr>
+<tr style="background-color: #fff">
+  <td>Data 1</td>
+  <td>Data 2</td>
+</tr>
+<tr style="background-color: #f9f9f9">
+  <td>Data 3</td>
+  <td>Data 4</td>
+</tr>
+</table>
 
 
