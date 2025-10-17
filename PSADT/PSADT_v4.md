@@ -10,6 +10,8 @@
 	* [6. Function Names](#6-function-names)
 	* [7. Important Note:](#7-important-note)
 	* [8. Other UI Improvements](#8-other-ui-improvements)
+	* [9. Deployment Concepts](#9-deployment-concepts)
+		* [Key Pointers:](#key-pointers)
 
 <!-- End Document Outline -->
 ## 1. What is PSAppDeployToolkit ?
