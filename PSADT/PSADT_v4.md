@@ -667,20 +667,36 @@ To change GUI color, modify the value for **FluentAccentColor** from **Config.ps
 
 **Deployment Template File & Folder Structure** 
 
-
-<table>
-<tr style="background-color: #ffebe9">
-  <td>Header 1</td>
-  <td>Header 2</td>
-</tr>
-<tr style="background-color: #fff">
-  <td>Data 1</td>
-  <td>Data 2</td>
-</tr>
-<tr style="background-color: #f9f9f9">
-  <td>Data 3</td>
-  <td>Data 4</td>
-</tr>
-</table>
+![FOL 1](Img/FOL_1.PNG)
 
 
+| File / Folder Name             | Purpose                                                     |
+|--------------------------------|-------------------------------------------------------------|
+| ***Invoke-AppDeployToolkit.ps1***    | ***Main entry point for your deployment.***                       |
+| Invoke-AppDeployToolkit.exe    | Helper executable to launch the main script.                |
+| Files/                         | Put install files here, e.g. Setup.exe, AppInstall.msi etc. |
+| SupportFiles/                  | Optional install files here, e.g. PerUserSettings.reg etc.  |
+| PSAppDeployToolkit/            | PSADT Core Module. ***Do not modify.***                           |
+| PSAppDeployToolkit.Extensions/ | PSADT Extensions (optional).                                |
+| Assets/                        | PSADT App Icon. Or your organization logo.                  |
+| Config/                        | PSADT Configuration File. Controls deployment behaviour.    |
+| Strings/                       | PSADT Strings. Controls User Interface text per language.   |
+
+### Key Pointers:
+
+1. **Project Initialization**
+
+* Use the `New-ADTTemplate` command to create a new project.
+* This command generates a standard file and folder structure to start from.
+
+2. **Core File & Folder Structure**
+* **Invoke-AppsToolkit.ps1**: The main PowerShell script. 
+* **Invoke-AppsToolkit.exe**: A recommended executable helper that replaces the PS1 script. It includes enhancements like ensuring the script runs as 64-bit in environments in Intune. 
+* **Files Folder:** For storing the main application installation files (e.g., .msi, .exe). 
+* **SupportFiles Folder**: For optional additional files like registry (.reg) files or other post-installation customizations. 
+* **PSAppsToolkit Folder**: The core, signed module. 
+***Critical:*** Do not modify any files inside this folder, as it is code-signed and self-validating. Tampering will cause failures.
+* **User-Configurable Folders (Assets, Config, Strings)**: These are separate from the core module and are meant for user customization. Modify configurations, icons, and dialog text here.
+
+3. **PSAppDeployToolkit.Extensions**
+  For adding custom functions. The main toolkit module automatically imports any valid extensions found in this folder, making them available for use.
