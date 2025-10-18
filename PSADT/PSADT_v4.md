@@ -702,3 +702,32 @@ To change GUI color, modify the value for **FluentAccentColor** from **Config.ps
 
 3. **PSAppDeployToolkit.Extensions**
   For adding custom functions. The main toolkit module automatically imports any valid extensions found in this folder, making them available for use.
+
+4. **Invoke-AppsToolkit.ps1**: Invoke-AppsToolkit.ps1 is made up of **4 key** components.
+* ADTSession
+
+  **3 Deployment Types:**
+
+* Install 
+* Repair 
+* Uninstall 
+
+## ADTSession Object
+
+**The heart of PSADT v4:**
+* Encapsulates all deployment state, configuration, and context. 
+* Provides better isolation, state management, and extensibility compared 
+to the global variable approach used in v3.
+* It gathers essential details about the deployment environment and provides convenient properties and methods for use in scripts. 
+
+**Standard deployment template creates ADTSession for you:**
+* Opens session prior to deployment start. 
+* Closed on deployment completion (or in the event of an error). 
+* Refer complete [properties](https://psappdeploytoolkit.com/docs/reference/adtsession-object) of ADTSession.
+
+
+![DEP 1](Img/DEP_1.PNG)
+
+![DEP 2](Img/DEP_2.PNG)
+
+
