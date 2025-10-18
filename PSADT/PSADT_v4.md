@@ -12,6 +12,7 @@
 	* [8. Other UI Improvements](#8-other-ui-improvements)
 	* [9. Deployment Concepts](#9-deployment-concepts)
 		* [Key Pointers:](#key-pointers)
+	* [10. ADTSession Object](#10-adtsession-object)
 
 <!-- End Document Outline -->
 ## 1. What is PSAppDeployToolkit ?
@@ -712,7 +713,7 @@ To change GUI color, modify the value for **FluentAccentColor** from **Config.ps
 * Repair 
 * Uninstall 
 
-## ADTSession Object
+## 10. ADTSession Object
 
 **The heart of PSADT v4:**
 * Encapsulates all deployment state, configuration, and context. 
