@@ -107,8 +107,8 @@ function Remove-IntuneWin32AppRegKey
         Write-Host "Successfully deleted $successfulDeletions registry key(s). Triggering Intune sync..." -ForegroundColor Cyan
         try
         {
-            #$SyncApp = New-Object -ComObject Shell.Application
-            #$SyncApp.open("intunemanagementextension://syncapp")
+            $SyncApp = New-Object -ComObject Shell.Application
+            $SyncApp.open("intunemanagementextension://syncapp")
             Write-Host "Intune sync triggered successfully." -ForegroundColor Green
         }
         catch
