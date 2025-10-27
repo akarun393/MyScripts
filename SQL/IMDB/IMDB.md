@@ -14,9 +14,9 @@
 	* [11. HAVING](#11-having)
 	* [12. Order of Keywords](#12-order-of-keywords)
 	* [13. INNER JOIN](#13-inner-join)
+	* [14. LEFT OUTER JOIN or LEFT JOIN](#14-left-outer-join-or-left-join)
 
 <!-- End Document Outline -->
-
 # Exploring IMDB Dataset MySQL
 
 ## 1. SHOW Tables
@@ -325,3 +325,18 @@ WHERE m.id <=9;
 ![INN JOIN 4](Img/INN_JOIN_4.png)
 
 * In this query only difference is we printed **name** columns from `movies` table and **genre** column from `movies_genres` table. Where as in previous query we printed * all columns from both tables.
+
+## 14. LEFT OUTER JOIN or LEFT JOIN
+
+* Returns all records from **A&#8594;Movies (table)** and matching ones from **B&#8594;Movies_genres (table)**.
+* Non matching records from `Movies_genres` table is marked as `NULL`.
+
+```sql
+SELECT * FROM movies m LEFT JOIN movies_genres g ON m.id = g.movie_id 
+WHERE m.id <=9;
+```
+![LEFT Join 1](Img/LEFT_Join_1.png)
+
+![LEFT Join](Img/LEFT_Join.png)
+
+* Here `{1,2,5,6,8,9}` are matching records and `{4,0,3,7}` in `Movies` table are non matching records in `Movies_genres` table. 
