@@ -15,6 +15,8 @@
 	* [12. Order of Keywords](#12-order-of-keywords)
 	* [13. INNER JOIN](#13-inner-join)
 	* [14. LEFT OUTER JOIN or LEFT JOIN](#14-left-outer-join-or-left-join)
+	* [15. RIGHT OUTER JOIN or RIGHT JOIN](#15-right-outer-join-or-right-join)
+	* [16. UNION](#16-union)
 
 <!-- End Document Outline -->
 # Exploring IMDB Dataset MySQL
@@ -328,7 +330,7 @@ WHERE m.id <=9;
 
 ## 14. LEFT OUTER JOIN or LEFT JOIN
 
-* Returns all records from **A&#8594;Movies (table)** and matching ones from **B&#8594;Movies_genres (table)**.
+* Returns all records from **A&#8594;Movies (table)** and matching ones from **B&#8594;Movies_genres (table)** if any.
 * Non matching records from `Movies_genres` table is marked as `NULL`.
 
 ```sql
@@ -340,3 +342,39 @@ WHERE m.id <=9;
 ![LEFT Join](Img/LEFT_Join.png)
 
 * Here `{1,2,5,6,8,9}` are matching records and `{4,0,3,7}` in `Movies` table are non matching records in `Movies_genres` table. 
+
+## 15. RIGHT OUTER JOIN or RIGHT JOIN
+
+* Returns all records from **B&#8594;Movies_genres (table)** and matching ones from **A&#8594;Movies (table)** if any.
+* Matching ones from **A&#8594;Movies (table)** already part of **B&#8594;Movies_genres (table)**.
+
+```sql
+SELECT * FROM movies m RIGHT JOIN movies_genres g ON m.id = g.movie_id 
+WHERE m.id <=9;
+```
+
+![RIGHT Join](Img/RIGHT_Join.png)
+
+![Right Join 2](Img/Right_Join_2.png)
+
+
+## 16. UNION
+
+* `UNION` is equivalent to `FULL JOIN` with `DISTINCT` in **T-SQL**, returns all the records from both the tables **A&#8594;Movies (table)** and **B&#8594;Movies_genres (table)**, matched where possible.
+* Table does not have matching records will have **NULL** values on both the sides i.e both the tables.
+* `FULL JOIN` keyword does not exist in **MySQL**, we need to use UNION keyword which excludes duplicate records or UNION ALL which includes duplicate records. 
+* By default `FULL JOIN` includes duplicate records, we need to use `DISTINCT` to remove duplicates in **T-SQL** records.
+
+```sql
+SELECT * FROM movies m LEFT JOIN movies_genres g ON m.id = g.movie_id 
+WHERE m.id <=9
+
+UNION
+
+SELECT * FROM movies m RIGHT JOIN movies_genres g ON m.id = g.movie_id 
+WHERE m.id <=9;
+```
+
+![Union 1](Img/Union_1.PNG)
+
+![FULL OR UNION](Img/FULL_OR_UNION.png)
