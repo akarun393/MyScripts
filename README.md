@@ -16,6 +16,7 @@
 
 ## :fire: My Intune Learnings :fire:
 1. [Windows Autopilot](https://github.com/akarun393/MyScripts/blob/master/Intune/WindowsAutopilot.md) 
+2. [Windows LAPS](https://github.com/akarun393/MyScripts/blob/master/Intune/LAPS/LAPS.md)
 
 ## :scroll: Intune Scripts :scroll:
 [Intune Scripts](https://github.com/akarun393/MyScripts/tree/master/Intune/Scripts)
